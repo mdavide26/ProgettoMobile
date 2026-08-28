@@ -7,13 +7,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.traveldiary"
+    namespace = "it.unibo.progettomobile"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.traveldiary"
+        applicationId = "it.unibo.progettomobile"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
