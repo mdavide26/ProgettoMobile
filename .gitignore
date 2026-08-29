@@ -1,0 +1,12 @@
+# Chiavi/config locali - MAI committare
+local.properties
+
+# Cartelle Gradle (build artifacts, cache locali)
+.gradle/
+build/
+app/build/
+
+# File IDE (opzionali, ma consigliati)
+.idea/
+*.iml
+
