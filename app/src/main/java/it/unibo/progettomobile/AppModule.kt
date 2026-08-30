@@ -17,8 +17,10 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import it.unibo.progettomobile.data.database.MovieDatabase
+import it.unibo.progettomobile.data.datastore.SessionManager
 import it.unibo.progettomobile.data.remote.OSMDataSource
 import it.unibo.progettomobile.data.repositories.AuthRepository
+import it.unibo.progettomobile.ui.screens.authentication.AuthViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -79,6 +81,8 @@ val appModule = module {
 
     single { SettingsRepository(get()) }
 
+    single { SessionManager(get()) }
+
     // ViewModels
 
     viewModel { HomeViewModel(get()) }
@@ -88,4 +92,6 @@ val appModule = module {
     viewModel { AddTravelViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
+
+    viewModel { AuthViewModel(get(), get()) }
 }
