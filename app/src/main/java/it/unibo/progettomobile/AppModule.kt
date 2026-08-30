@@ -19,7 +19,9 @@ import io.ktor.serialization.kotlinx.json.json
 import it.unibo.progettomobile.data.database.MovieDatabase
 import it.unibo.progettomobile.data.datastore.SessionManager
 import it.unibo.progettomobile.data.remote.OSMDataSource
+import it.unibo.progettomobile.data.remote.TmdbDataSource
 import it.unibo.progettomobile.data.repositories.AuthRepository
+import it.unibo.progettomobile.data.repositories.MovieRepository
 import it.unibo.progettomobile.ui.screens.authentication.AuthViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
@@ -51,6 +53,7 @@ val appModule = module {
     }
 
     single { get<MovieDatabase>().userDAO()}
+    single { get<MovieDatabase>().movieDAO()}
 
     single { AuthRepository(get()) }
 
@@ -94,4 +97,7 @@ val appModule = module {
     viewModel { SettingsViewModel(get()) }
 
     viewModel { AuthViewModel(get(), get()) }
+
+    single { MovieRepository(get(), get()) }
+    single { TmdbDataSource(get()) }
 }
