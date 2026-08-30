@@ -40,7 +40,7 @@ fun TravelDetailsScreen(navController: NavHostController, trip: Trip) {
     }
 
     Scaffold(
-        topBar = { AppBar("Travel Details", navController, showSearchButton = false) },
+        topBar = { TopBar("Travel Details", navController, showSearchButton = false) },
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.tertiary,

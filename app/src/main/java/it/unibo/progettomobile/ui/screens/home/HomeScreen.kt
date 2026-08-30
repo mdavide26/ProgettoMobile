@@ -31,7 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import it.unibo.progettomobile.data.database.Trip
 import it.unibo.progettomobile.ui.TravelDiaryRoute
-import it.unibo.progettomobile.ui.composables.AppBar
+import it.unibo.progettomobile.ui.composables.BottomBar
+import it.unibo.progettomobile.ui.composables.TopBar
 import it.unibo.progettomobile.ui.composables.ImageWithPlaceholder
 import it.unibo.progettomobile.ui.composables.Size
 import kotlin.collections.isNotEmpty
@@ -42,15 +43,16 @@ fun HomeScreen(
     navController: NavHostController
 ) {
     Scaffold(
-        floatingActionButton = {
+        /*floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.tertiary,
                 onClick = { navController.navigate(TravelDiaryRoute.AddTravel) }
             ) {
                 Icon(Icons.Outlined.Add, "Add Travel")
             }
-        },
-        topBar = { AppBar("TravelDiary", navController) }
+        },*/
+        topBar = { TopBar("ProgettoMobile", navController) },
+        bottomBar = { BottomBar(navController) }
     ) { contentPadding ->
         if (state.trips.isNotEmpty()) {
             LazyVerticalGrid(

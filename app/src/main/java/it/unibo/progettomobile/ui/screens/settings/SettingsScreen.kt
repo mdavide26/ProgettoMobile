@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import it.unibo.progettomobile.ui.composables.AppBar
+import it.unibo.progettomobile.ui.composables.TopBar
 
 @Composable
 fun SettingsScreen(
@@ -25,7 +25,7 @@ fun SettingsScreen(
 ) {
     Scaffold(
         topBar = {
-            AppBar("Settings", navController, showSearchButton = false, showSettingsButton = false)
+            TopBar("Settings", navController, showSearchButton = false)
         }
     ) { contentPadding ->
         Column(
