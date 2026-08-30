@@ -17,6 +17,10 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
 import it.unibo.progettomobile.data.remote.OSMDataSource
+import it.unibo.progettomobile.data.remote.TmdbDataSource
+import it.unibo.progettomobile.data.repositories.MovieRepository
+import it.unibo.progettomobile.ui.screens.favorites.FavoritesViewModel
+import it.unibo.progettomobile.ui.screens.moviedetails.MovieDetailsViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -28,15 +32,17 @@ val appModule = module {
 
     single { get<Context>().dataStore }
 
+    single { TmdbDataSource(get()) }
+
     single {
         Room.databaseBuilder(
             get(),
             TravelDiaryDatabase::class.java,
             "ProgettoMobile"
-        ).build()
+        )
+        .fallbackToDestructiveMigration(true)
+        .build()
     }
-
-    single { get<TravelDiaryDatabase>().tripsDAO() }
 
     single {
         HttpClient {
@@ -65,11 +71,19 @@ val appModule = module {
 
     single { SettingsRepository(get()) }
 
+    single { get<TravelDiaryDatabase>().movieDAO() }
+
+    single { MovieRepository(get(), get()) }
+
     // ViewModels
 
     viewModel { HomeViewModel(get()) }
 
     viewModel { TravelDetailsViewModel(get()) }
+
+    viewModel { MovieDetailsViewModel(get()) }
+
+    viewModel { FavoritesViewModel(get()) }
 
     viewModel { AddTravelViewModel(get()) }
 

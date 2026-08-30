@@ -3,9 +3,11 @@ package it.unibo.progettomobile.ui.composables
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
@@ -37,7 +39,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import it.unibo.progettomobile.ui.TravelDiaryRoute
+import it.unibo.progettomobile.ui.ProgettoMobileRoute
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -125,6 +127,7 @@ fun TopBar(
 fun BottomBar(
     navController: NavHostController,
     showHomeButton: Boolean = true,
+    showFavoritesButton: Boolean = true,
     showSettingsButton: Boolean = true,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -134,7 +137,7 @@ fun BottomBar(
     ) {
         if (showHomeButton) {
             val isHomeSelected = navBackStackEntry?.destination?.hierarchy?.any {
-                it.hasRoute<TravelDiaryRoute.Home>()
+                it.hasRoute<ProgettoMobileRoute.Home>()
             } == true
 
             NavigationBarItem(
@@ -153,7 +156,40 @@ fun BottomBar(
                 ),
                 onClick = {
                     if (!isHomeSelected) {
-                        navController.navigate(TravelDiaryRoute.Home) {
+                        navController.navigate(ProgettoMobileRoute.Home) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            )
+        }
+
+        if (showFavoritesButton) {
+            val isFavoritesSelected = navBackStackEntry?.destination?.hierarchy?.any {
+                it.hasRoute<ProgettoMobileRoute.Favorites>()
+            } == true
+
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = if (isFavoritesSelected) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        contentDescription = "Preferiti"
+                    )
+                },
+                label = { Text("Preferiti") },
+                selected = isFavoritesSelected,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+                onClick = {
+                    if (!isFavoritesSelected) {
+                        navController.navigate(ProgettoMobileRoute.Favorites) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }
@@ -167,7 +203,7 @@ fun BottomBar(
 
         if (showSettingsButton) {
             val isSettingsSelected = navBackStackEntry?.destination?.hierarchy?.any {
-                it.hasRoute<TravelDiaryRoute.Settings>()
+                it.hasRoute<ProgettoMobileRoute.Settings>()
             } == true
 
             NavigationBarItem(
@@ -186,7 +222,7 @@ fun BottomBar(
                 ),
                 onClick = {
                     if (!isSettingsSelected) {
-                        navController.navigate(TravelDiaryRoute.Settings) {
+                        navController.navigate(ProgettoMobileRoute.Settings) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }

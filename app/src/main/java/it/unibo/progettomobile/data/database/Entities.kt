@@ -21,3 +21,12 @@ data class Trip (
     @ColumnInfo
     val imageUri: String?
 )
+
+@Entity
+data class FavoriteMovie(
+    @PrimaryKey val id: Int,
+    val title: String,
+    val posterPath: String?,
+    val overview: String,
+    val voteAverage: Double
+)
