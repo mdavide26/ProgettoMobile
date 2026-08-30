@@ -16,7 +16,9 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import it.unibo.progettomobile.data.database.MovieDatabase
 import it.unibo.progettomobile.data.remote.OSMDataSource
+import it.unibo.progettomobile.data.repositories.AuthRepository
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -32,11 +34,23 @@ val appModule = module {
         Room.databaseBuilder(
             get(),
             TravelDiaryDatabase::class.java,
-            "ProgettoMobile"
+            "travel diary db"
         ).build()
     }
 
     single { get<TravelDiaryDatabase>().tripsDAO() }
+
+    single {
+        Room.databaseBuilder(
+            get(),
+            MovieDatabase::class.java,
+            "ProgettoMobile"
+        ).build()
+    }
+
+    single { get<MovieDatabase>().userDAO()}
+
+    single { AuthRepository(get()) }
 
     single {
         HttpClient {
