@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import it.unibo.progettomobile.data.LocationService
 import it.unibo.progettomobile.data.remote.OSMDataSource
-import it.unibo.progettomobile.ui.composables.AppBar
+import it.unibo.progettomobile.ui.composables.TopBar
 import it.unibo.progettomobile.ui.composables.ImageWithPlaceholder
 import it.unibo.progettomobile.ui.composables.LocationDisabledAlert
 import it.unibo.progettomobile.ui.composables.NoConnectivitySnackbar
@@ -105,7 +105,7 @@ fun AddTravelScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        topBar = { AppBar("Add Travel", navController, showSearchButton = false) },
+        topBar = { TopBar("Add Travel", navController, showSearchButton = false) },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             FloatingActionButton(

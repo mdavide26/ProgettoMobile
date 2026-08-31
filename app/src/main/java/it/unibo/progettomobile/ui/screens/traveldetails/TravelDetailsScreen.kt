@@ -22,9 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import it.unibo.progettomobile.data.database.Trip
-import it.unibo.progettomobile.ui.composables.AppBar
 import it.unibo.progettomobile.ui.composables.ImageWithPlaceholder
 import it.unibo.progettomobile.ui.composables.Size
+import it.unibo.progettomobile.ui.composables.TopBar
 
 @Composable
 fun TravelDetailsScreen(navController: NavHostController, trip: Trip) {
@@ -40,7 +40,7 @@ fun TravelDetailsScreen(navController: NavHostController, trip: Trip) {
     }
 
     Scaffold(
-        topBar = { AppBar("Travel Details", navController, showSearchButton = false) },
+        topBar = { TopBar("Travel Details", navController, showSearchButton = false) },
         floatingActionButton = {
             FloatingActionButton(
                 containerColor = MaterialTheme.colorScheme.tertiary,

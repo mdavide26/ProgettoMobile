@@ -6,6 +6,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import it.unibo.progettomobile.BuildConfig
+import it.unibo.progettomobile.data.remote.dto.MovieDTO
 import it.unibo.progettomobile.data.remote.dto.MovieListDTO
 
 class TmdbDataSource(private val httpClient: HttpClient) {
@@ -18,6 +19,14 @@ class TmdbDataSource(private val httpClient: HttpClient) {
         val url = "$BASE_URL/movie/popular?language=it"
         return httpClient.get(url) {
             header(HttpHeaders.Authorization, "Bearer ${BuildConfig.TMDB_API_TOKEN}")
+        }.body()
+    }
+
+    suspend fun getMovieDetails(movieId: Int) : MovieDTO {
+        val url = "$BASE_URL/movie/$movieId?language=it"
+        return httpClient.get(url) {
+            header(HttpHeaders.Authorization, "Bearer ${BuildConfig.TMDB_API_TOKEN}")
+            header(HttpHeaders.Accept, "application/json")
         }.body()
     }
 }

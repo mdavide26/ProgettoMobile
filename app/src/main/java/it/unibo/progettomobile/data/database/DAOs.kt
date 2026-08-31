@@ -20,3 +20,18 @@ interface TripsDAO {
     @Delete
     suspend fun delete(item: Trip)
 }
+
+@Dao
+interface MovieDAO {
+    @Query("SELECT * FROM FavoriteMovie")
+    fun getAllFavorites(): Flow<List<FavoriteMovie>>
+
+    @Upsert
+    suspend fun insertFavorite(movie: FavoriteMovie)
+
+    @Delete
+    suspend fun deleteFavorite(movie: FavoriteMovie)
+
+    @Query("SELECT EXISTS(SELECT * FROM FavoriteMovie WHERE id = :id)")
+    fun isFavorite(id: Int): Flow<Boolean>
+}

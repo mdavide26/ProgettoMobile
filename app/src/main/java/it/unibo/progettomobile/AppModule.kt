@@ -16,11 +16,11 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
-import it.unibo.progettomobile.data.database.MovieDatabase
-import it.unibo.progettomobile.data.datastore.SessionManager
 import it.unibo.progettomobile.data.remote.OSMDataSource
-import it.unibo.progettomobile.data.repositories.AuthRepository
-import it.unibo.progettomobile.ui.screens.authentication.AuthViewModel
+import it.unibo.progettomobile.data.remote.TmdbDataSource
+import it.unibo.progettomobile.data.repositories.MovieRepository
+import it.unibo.progettomobile.ui.screens.favorites.FavoritesViewModel
+import it.unibo.progettomobile.ui.screens.moviedetails.MovieDetailsViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -32,27 +32,17 @@ val appModule = module {
 
     single { get<Context>().dataStore }
 
+    single { TmdbDataSource(get()) }
+
     single {
         Room.databaseBuilder(
             get(),
             TravelDiaryDatabase::class.java,
-            "travel diary db"
-        ).build()
-    }
-
-    single { get<TravelDiaryDatabase>().tripsDAO() }
-
-    single {
-        Room.databaseBuilder(
-            get(),
-            MovieDatabase::class.java,
             "ProgettoMobile"
-        ).build()
+        )
+        .fallbackToDestructiveMigration(true)
+        .build()
     }
-
-    single { get<MovieDatabase>().userDAO()}
-
-    single { AuthRepository(get()) }
 
     single {
         HttpClient {
@@ -81,7 +71,9 @@ val appModule = module {
 
     single { SettingsRepository(get()) }
 
-    single { SessionManager(get()) }
+    single { get<TravelDiaryDatabase>().movieDAO() }
+
+    single { MovieRepository(get(), get()) }
 
     // ViewModels
 
@@ -89,9 +81,11 @@ val appModule = module {
 
     viewModel { TravelDetailsViewModel(get()) }
 
+    viewModel { MovieDetailsViewModel(get()) }
+
+    viewModel { FavoritesViewModel(get()) }
+
     viewModel { AddTravelViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
-
-    viewModel { AuthViewModel(get(), get()) }
 }

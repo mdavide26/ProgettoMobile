@@ -10,3 +10,6 @@ app/build/
 .idea/
 *.iml
 
+# File di creazione del mac
+.DS_Store
+
