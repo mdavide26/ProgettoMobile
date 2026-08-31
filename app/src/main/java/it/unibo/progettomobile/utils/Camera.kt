@@ -30,9 +30,15 @@ fun rememberCameraLauncher(
 
     val ctx = LocalContext.current
     val takePicture = {
-        val file = File.createTempFile("tmp_image", ".jpg", ctx.externalCacheDir)
-        launcherUri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.provider", file)
-        launcher.launch(launcherUri!!)
+        try {
+            val cacheDir = ctx.externalCacheDir ?: ctx.cacheDir
+            val file = File.createTempFile("tmp_image_", ".jpg", cacheDir)
+            val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.provider", file)
+            launcherUri = uri
+            launcher.launch(uri)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     return pictureUri to takePicture
