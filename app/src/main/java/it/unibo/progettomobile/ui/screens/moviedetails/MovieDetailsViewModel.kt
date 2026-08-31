@@ -1,6 +1,5 @@
 package it.unibo.progettomobile.ui.screens.moviedetails
 
-import androidx.activity.result.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.unibo.progettomobile.data.remote.dto.MovieDTO
@@ -13,13 +12,27 @@ class MovieDetailsViewModel(private val repository: MovieRepository) : ViewModel
     private val _state = MutableStateFlow<MovieDTO?>(null)
     val state = _state.asStateFlow()
 
+    private val _isFavorite = MutableStateFlow(false)
+    val isFavorite = _isFavorite.asStateFlow()
+
     fun fetchDetails(movieId: Int) {
         viewModelScope.launch {
             try {
                 val movie = repository.getMovieDetails(movieId)
                 _state.value = movie
+                repository.isFavorite(movieId).collect { fav ->
+                    _isFavorite.value = fav
+                }
             } catch (e: Exception) {
                 // Gestisci errore
+            }
+        }
+    }
+
+    fun toggleFavorite() {
+        viewModelScope.launch {
+            _state.value?.let { movie ->
+                repository.toggleFavorite(movie, _isFavorite.value)
             }
         }
     }

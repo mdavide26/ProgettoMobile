@@ -3,9 +3,11 @@ package it.unibo.progettomobile.ui.composables
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
@@ -128,6 +130,7 @@ fun BottomBar(
     navController: NavHostController,
     showHomeButton: Boolean = true,
     showFavoritesButton: Boolean = true,
+    showStatisticsButton: Boolean = true,
     showSettingsButton: Boolean = true,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -190,6 +193,39 @@ fun BottomBar(
                 onClick = {
                     if (!isFavoritesSelected) {
                         navController.navigate(ProgettoMobileRoute.Favorites) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            )
+        }
+
+        if (showStatisticsButton) {
+            val isStatisticsSelected = navBackStackEntry?.destination?.hierarchy?.any {
+                it.hasRoute<ProgettoMobileRoute.Statistics>()
+            } == true
+
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = if (isStatisticsSelected) Icons.Filled.BarChart else Icons.Outlined.BarChart,
+                        contentDescription = "Statistiche"
+                    )
+                },
+                label = { Text("Statistiche") },
+                selected = isStatisticsSelected,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+                onClick = {
+                    if (!isStatisticsSelected) {
+                        navController.navigate(ProgettoMobileRoute.Statistics) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
                             }

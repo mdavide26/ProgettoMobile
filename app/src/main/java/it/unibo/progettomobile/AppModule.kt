@@ -24,6 +24,7 @@ import it.unibo.progettomobile.data.remote.TmdbDataSource
 import it.unibo.progettomobile.data.repositories.MovieRepository
 import it.unibo.progettomobile.ui.screens.favorites.FavoritesViewModel
 import it.unibo.progettomobile.ui.screens.moviedetails.MovieDetailsViewModel
+import it.unibo.progettomobile.ui.screens.statistics.StatisticsViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -96,5 +97,6 @@ val appModule = module {
 
     viewModel { SettingsViewModel(get(),get())}
 
-    viewModel { AuthViewModel(get(), get()) }   // <- RIAGGIUNTO
+    viewModel { AuthViewModel(get(), get()) }
+    viewModel { StatisticsViewModel(get()) }
 }

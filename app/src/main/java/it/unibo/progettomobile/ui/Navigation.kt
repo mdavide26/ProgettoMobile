@@ -20,11 +20,14 @@ import it.unibo.progettomobile.ui.screens.moviedetails.MovieDetailsScreen
 import it.unibo.progettomobile.ui.screens.moviedetails.MovieDetailsViewModel
 import it.unibo.progettomobile.ui.screens.settings.SettingsScreen
 import it.unibo.progettomobile.ui.screens.settings.SettingsViewModel
+import it.unibo.progettomobile.ui.screens.statistics.StatisticsScreen
 import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 sealed interface ProgettoMobileRoute {
+
+    @Serializable data object Statistics : ProgettoMobileRoute
     @Serializable data object Home : ProgettoMobileRoute
     @Serializable data object Settings : ProgettoMobileRoute
     @Serializable data object Favorites : ProgettoMobileRoute
@@ -74,7 +77,10 @@ fun TravelDiaryNavGraph(
                 }
 
                 val state by detailsVm.state.collectAsStateWithLifecycle()
-                MovieDetailsScreen(state, navController)
+                MovieDetailsScreen(state, navController, detailsVm)
+            }
+            composable<ProgettoMobileRoute.Statistics> {
+                StatisticsScreen(navController)
             }
             composable<ProgettoMobileRoute.Settings> {
                 val settingsVm = koinViewModel<SettingsViewModel>()

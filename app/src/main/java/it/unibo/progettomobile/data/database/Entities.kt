@@ -28,5 +28,6 @@ data class FavoriteMovie(
     val title: String,
     val posterPath: String?,
     val overview: String,
-    val voteAverage: Double
+    val voteAverage: Double,
+    val genreId: Int? = null   // <- AGGIUNTO
 )

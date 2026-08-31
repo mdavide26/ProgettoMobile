@@ -7,6 +7,7 @@ import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import it.unibo.progettomobile.BuildConfig
 import it.unibo.progettomobile.data.remote.dto.MovieDTO
+import it.unibo.progettomobile.data.remote.dto.MovieDetailDTO
 import it.unibo.progettomobile.data.remote.dto.MovieListDTO
 
 class TmdbDataSource(private val httpClient: HttpClient) {
@@ -15,18 +16,27 @@ class TmdbDataSource(private val httpClient: HttpClient) {
         private const val BASE_URL = "https://api.themoviedb.org/3"
     }
 
-    suspend fun getPopularFilms() : MovieListDTO {
+    suspend fun getPopularFilms(): MovieListDTO {
         val url = "$BASE_URL/movie/popular?language=it"
         return httpClient.get(url) {
             header(HttpHeaders.Authorization, "Bearer ${BuildConfig.TMDB_API_TOKEN}")
         }.body()
     }
 
-    suspend fun getMovieDetails(movieId: Int) : MovieDTO {
+    suspend fun getMovieDetails(movieId: Int): MovieDTO {
         val url = "$BASE_URL/movie/$movieId?language=it"
-        return httpClient.get(url) {
+        val response: MovieDetailDTO = httpClient.get(url) {
             header(HttpHeaders.Authorization, "Bearer ${BuildConfig.TMDB_API_TOKEN}")
             header(HttpHeaders.Accept, "application/json")
         }.body()
+
+        return MovieDTO(
+            id = response.id,
+            title = response.title,
+            overview = response.overview,
+            poster_path = response.poster_path,
+            vote_average = response.vote_average,
+            genre_ids = response.genres.map { it.id }
+        )
     }
 }

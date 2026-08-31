@@ -7,13 +7,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add // O un'altra icona a tua scelta
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -21,21 +24,28 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import it.unibo.progettomobile.data.remote.dto.MovieDTO
 import it.unibo.progettomobile.ui.composables.TopBar
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun MovieDetailsScreen(movie: MovieDTO?, navController: NavHostController) {
+fun MovieDetailsScreen(
+    movie: MovieDTO?,
+    navController: NavHostController,
+    viewModel: MovieDetailsViewModel = koinViewModel()
+) {
+    val isFavorite by viewModel.isFavorite.collectAsState()
+
     Scaffold(
         topBar = { TopBar(movie?.title ?: "Dettagli", navController) },
-        // AGGIUNTO: Il bottone volante
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    /* Qui metterai l'azione, ad esempio aggiungere ai preferiti o a un diario */
-                },
+                onClick = { viewModel.toggleFavorite() },
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Aggiungi ai preferiti")
+                Icon(
+                    if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = "Aggiungi ai preferiti"
+                )
             }
         }
     ) { padding ->
