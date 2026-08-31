@@ -6,10 +6,10 @@ import it.unibo.progettomobile.data.database.dao.UserDAO
 import it.unibo.progettomobile.data.database.entities.User
 
 @Database(
-    entities = [FavoriteMovie::class, User::class],
-    version = 4
+    entities=[
+        User::class
+    ] , version = 1
 )
-abstract class ProgettoMobileDatabase : RoomDatabase() {
-    abstract fun movieDAO(): MovieDAO
-    abstract fun userDAO(): UserDAO
+abstract class MovieDatabase : RoomDatabase () {
+    abstract fun userDAO() : UserDAO
 }

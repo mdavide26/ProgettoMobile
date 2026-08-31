@@ -1,6 +1,5 @@
 package it.unibo.progettomobile.ui.screens.moviedetails
 
-import androidx.activity.result.launch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.unibo.progettomobile.data.remote.dto.MovieDTO
@@ -33,10 +32,10 @@ class MovieDetailsViewModel(private val repository: MovieRepository) : ViewModel
     }
 
     fun toggleFavorite() {
-        val movie = _state.value ?: return
         viewModelScope.launch {
-            // Usa il repository per aggiungere/rimuovere
-            repository.toggleFavorite(movie, _isFavorite.value)
+            _state.value?.let { movie ->
+                repository.toggleFavorite(movie, _isFavorite.value)
+            }
         }
     }
 }

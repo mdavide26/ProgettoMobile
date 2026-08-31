@@ -2,15 +2,18 @@ package it.unibo.progettomobile.data.remote.dto
 
 import kotlinx.serialization.Serializable
 
-/*
-* Classe che serve a prendere i dati dal JSON passati dalla chiamata API del sito
-* */
 @Serializable
-data class MovieDTO(
+data class GenreDTO(
+    val id: Int,
+    val name: String
+)
+
+@Serializable
+data class MovieDetailDTO(
     val id: Int,
     val title: String,
     val overview: String,
     val poster_path: String? = null,
     val vote_average: Double = 0.0,
-    val genre_ids: List<Int> = emptyList()
+    val genres: List<GenreDTO> = emptyList()
 )

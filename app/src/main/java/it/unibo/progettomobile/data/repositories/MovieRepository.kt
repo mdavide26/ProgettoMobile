@@ -52,6 +52,7 @@ class MovieRepository(
         title = title,
         posterPath = poster_path,
         overview = overview,
-        voteAverage = vote_average
+        voteAverage = vote_average,
+        genreId = genre_ids.firstOrNull()   // <- AGGIUNTO
     )
 }

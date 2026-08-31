@@ -85,4 +85,7 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(kotlin("test"))
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.9.0")
+    implementation("at.favre.lib:bcrypt:0.10.2")
+    androidTestImplementation("androidx.room:room-testing:2.6.1")
+    androidTestImplementation(kotlin("test"))
 }

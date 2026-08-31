@@ -4,20 +4,24 @@ import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import it.unibo.progettomobile.data.LocationService
+import it.unibo.progettomobile.data.database.ProgettoMobileDatabase
+import it.unibo.progettomobile.data.datastore.SessionManager
+import it.unibo.progettomobile.data.remote.OSMDataSource
+import it.unibo.progettomobile.data.remote.TmdbDataSource
+import it.unibo.progettomobile.data.repositories.AuthRepository
+import it.unibo.progettomobile.data.repositories.MovieRepository
 import it.unibo.progettomobile.data.repositories.SettingsRepository
+import it.unibo.progettomobile.ui.screens.authentication.AuthViewModel
+import it.unibo.progettomobile.ui.screens.favorites.FavoritesViewModel
 import it.unibo.progettomobile.ui.screens.home.HomeViewModel
+import it.unibo.progettomobile.ui.screens.moviedetails.MovieDetailsViewModel
 import it.unibo.progettomobile.ui.screens.settings.SettingsViewModel
+import it.unibo.progettomobile.ui.screens.statistics.StatisticsViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
-import it.unibo.progettomobile.data.database.ProgettoMobileDatabase
-import it.unibo.progettomobile.data.remote.OSMDataSource
-import it.unibo.progettomobile.data.remote.TmdbDataSource
-import it.unibo.progettomobile.data.repositories.MovieRepository
-import it.unibo.progettomobile.ui.screens.favorites.FavoritesViewModel
-import it.unibo.progettomobile.ui.screens.moviedetails.MovieDetailsViewModel
 import kotlinx.serialization.json.Json
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
@@ -42,6 +46,7 @@ val appModule = module {
     }
 
     single { get<ProgettoMobileDatabase>().movieDAO() }
+    single { get<ProgettoMobileDatabase>().userDAO() }
 
     single {
         HttpClient {
@@ -70,6 +75,9 @@ val appModule = module {
 
     single { MovieRepository(get(), get()) }
 
+    single { AuthRepository(get()) }
+    single { SessionManager(get()) }
+
     // ViewModels
 
     viewModel { HomeViewModel(get()) }
@@ -78,5 +86,9 @@ val appModule = module {
 
     viewModel { FavoritesViewModel(get()) }
 
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(), get()) }
+
+    viewModel { AuthViewModel(get(), get()) }
+
+    viewModel { StatisticsViewModel(get()) }
 }

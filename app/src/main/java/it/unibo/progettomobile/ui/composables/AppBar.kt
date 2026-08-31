@@ -3,9 +3,11 @@ package it.unibo.progettomobile.ui.composables
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Home
@@ -36,11 +38,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import it.unibo.progettomobile.ui.ProgettoMobileRoute
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -132,6 +132,7 @@ fun BottomBar(
     navController: NavHostController,
     showHomeButton: Boolean = true,
     showFavoritesButton: Boolean = true,
+    showStatisticsButton: Boolean = true,
     showSettingsButton: Boolean = true,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -161,11 +162,10 @@ fun BottomBar(
                 onClick = {
                     if (!isHomeSelected) {
                         navController.navigate(ProgettoMobileRoute.Home) {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                saveState = true
+                            popUpTo<ProgettoMobileRoute.Home> {
+                                inclusive = true
                             }
                             launchSingleTop = true
-                            restoreState = true
                         }
                     }
                 }
@@ -194,7 +194,40 @@ fun BottomBar(
                 onClick = {
                     if (!isFavoritesSelected) {
                         navController.navigate(ProgettoMobileRoute.Favorites) {
-                            popUpTo(navController.graph.findStartDestination().id) {
+                            popUpTo<ProgettoMobileRoute.Home> {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                }
+            )
+        }
+
+        if (showStatisticsButton) {
+            val isStatisticsSelected = navBackStackEntry?.destination?.hierarchy?.any {
+                it.hasRoute<ProgettoMobileRoute.Statistics>()
+            } == true
+
+            NavigationBarItem(
+                icon = {
+                    Icon(
+                        imageVector = if (isStatisticsSelected) Icons.Filled.BarChart else Icons.Outlined.BarChart,
+                        contentDescription = "Statistiche"
+                    )
+                },
+                label = { Text("Statistiche") },
+                selected = isStatisticsSelected,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer
+                ),
+                onClick = {
+                    if (!isStatisticsSelected) {
+                        navController.navigate(ProgettoMobileRoute.Statistics) {
+                            popUpTo<ProgettoMobileRoute.Home> {
                                 saveState = true
                             }
                             launchSingleTop = true
@@ -227,7 +260,7 @@ fun BottomBar(
                 onClick = {
                     if (!isSettingsSelected) {
                         navController.navigate(ProgettoMobileRoute.Settings) {
-                            popUpTo(navController.graph.findStartDestination().id) {
+                            popUpTo<ProgettoMobileRoute.Home> {
                                 saveState = true
                             }
                             launchSingleTop = true
