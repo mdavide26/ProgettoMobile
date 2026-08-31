@@ -47,7 +47,8 @@ import it.unibo.progettomobile.ui.ProgettoMobileRoute
 fun TopBar(
     title: String,
     navController: NavHostController,
-    showSearchButton: Boolean = true
+    showSearchButton: Boolean = true,
+    onSearchQueryChange: (String) -> Unit = {}
 ) {
     var isSearchActive by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
@@ -58,7 +59,10 @@ fun TopBar(
             if (isSearchActive) {
                 TextField(
                     value = searchQuery,
-                    onValueChange = { searchQuery = it },
+                    onValueChange = {
+                        searchQuery = it
+                        onSearchQueryChange(it)
+                    },
                     placeholder = { Text("Search a film..") },
                     singleLine = true,
                     modifier = Modifier

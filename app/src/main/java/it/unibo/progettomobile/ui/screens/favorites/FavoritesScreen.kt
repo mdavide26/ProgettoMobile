@@ -23,7 +23,7 @@ fun FavoritesScreen(
     navController: NavHostController
 ) {
     Scaffold(
-        topBar = { TopBar("I miei Preferiti", navController) },
+        topBar = { TopBar("I miei Preferiti", navController, showSearchButton = false) },
         bottomBar = { BottomBar(navController) }
     ) { padding ->
         if (favorites.isEmpty()) {
@@ -37,7 +37,6 @@ fun FavoritesScreen(
                 modifier = Modifier.padding(padding)
             ) {
                 items(favorites) { fav ->
-                    // Convertiamo FavoriteMovie in MovieDTO per riutilizzare MovieItem
                     val movieDto = MovieDTO(fav.id, fav.title, fav.overview, fav.posterPath, fav.voteAverage)
                     MovieItem(movieDto, onClick = {
                         navController.navigate(ProgettoMobileRoute.MovieDetails(fav.id))

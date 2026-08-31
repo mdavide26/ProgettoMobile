@@ -1,5 +1,6 @@
 package it.unibo.progettomobile.ui.screens.home
 
+import android.icu.text.StringSearch
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,10 +38,15 @@ import kotlin.collections.isNotEmpty
 @Composable
 fun HomeScreen(
     state: HomeState,
-    navController: NavHostController
+    navController: NavHostController,
+    onSearch: (String) -> Unit
 ) {
     Scaffold(
-        topBar = { TopBar("Film Popolari", navController) },
+        topBar = { TopBar(
+            title = "Film Popolari",
+            navController = navController,
+            onSearchQueryChange = onSearch
+        ) },
         bottomBar = { BottomBar(navController) }
     ) { contentPadding ->
         if (state.isLoading) {

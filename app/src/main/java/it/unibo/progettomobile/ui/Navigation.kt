@@ -40,7 +40,11 @@ fun TravelDiaryNavGraph(navController: NavHostController) {
         composable<ProgettoMobileRoute.Home> {
             val homeVm = koinViewModel<HomeViewModel>()
             val state by homeVm.state.collectAsStateWithLifecycle()
-            HomeScreen(state, navController)
+            HomeScreen(
+                state = state,
+                navController = navController,
+                onSearch = { homeVm.onSearchQueryChange(it) }
+            )
         }
         composable<ProgettoMobileRoute.MovieDetails> { backStackEntry ->
             val route = backStackEntry.toRoute<ProgettoMobileRoute.MovieDetails>()
@@ -51,7 +55,13 @@ fun TravelDiaryNavGraph(navController: NavHostController) {
             }
 
             val state by detailsVm.state.collectAsStateWithLifecycle()
-            MovieDetailsScreen(state, navController)
+            val isFavorite by detailsVm.isFavorite.collectAsStateWithLifecycle()
+            MovieDetailsScreen(
+                movie = state,
+                isFavorite = isFavorite,
+                onFavoriteToggle = { detailsVm.toggleFavorite() },
+                navController = navController
+            )
         }
         composable<ProgettoMobileRoute.Settings> {
             val settingsVm = koinViewModel<SettingsViewModel>()

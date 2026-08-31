@@ -8,6 +8,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add // O un'altra icona a tua scelta
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,19 +25,24 @@ import it.unibo.progettomobile.data.remote.dto.MovieDTO
 import it.unibo.progettomobile.ui.composables.TopBar
 
 @Composable
-fun MovieDetailsScreen(movie: MovieDTO?, navController: NavHostController) {
+fun MovieDetailsScreen(
+    movie: MovieDTO?,
+    isFavorite: Boolean,
+    onFavoriteToggle: () -> Unit,
+    navController: NavHostController
+) {
     Scaffold(
-        topBar = { TopBar(movie?.title ?: "Dettagli", navController) },
-        // AGGIUNTO: Il bottone volante
+        topBar = { TopBar(movie?.title ?: "Dettagli", navController, showSearchButton = false) },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    /* Qui metterai l'azione, ad esempio aggiungere ai preferiti o a un diario */
-                },
+                onClick = onFavoriteToggle,
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Icon(Icons.Filled.Add, contentDescription = "Aggiungi ai preferiti")
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = if (isFavorite) "Rimuovi dai preferiti" else "Aggiungi ai preferiti"
+                )
             }
         }
     ) { padding ->

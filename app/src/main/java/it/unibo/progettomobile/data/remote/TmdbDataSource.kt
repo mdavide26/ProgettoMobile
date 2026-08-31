@@ -29,4 +29,14 @@ class TmdbDataSource(private val httpClient: HttpClient) {
             header(HttpHeaders.Accept, "application/json")
         }.body()
     }
+
+    suspend fun searchMovies(query: String) : MovieListDTO {
+        return httpClient.get("$BASE_URL/search/movie") {
+            url {
+                parameters.append("query", query)
+                parameters.append("language", "it")
+            }
+            header(HttpHeaders.Authorization, "Bearer ${BuildConfig.TMDB_API_TOKEN}")
+        }.body()
+    }
 }

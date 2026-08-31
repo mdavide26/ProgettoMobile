@@ -24,6 +24,10 @@ class MovieRepository(
         return dataSource.getMovieDetails(movieId)
     }
 
+    suspend fun searchMovies(query: String): List<MovieDTO> {
+        return dataSource.searchMovies(query).results
+    }
+
     // --- Gestione Preferiti (Locale/Database) ---
 
     fun getAllFavorites(): Flow<List<FavoriteMovie>> {

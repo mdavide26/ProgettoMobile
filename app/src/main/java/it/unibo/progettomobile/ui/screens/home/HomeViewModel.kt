@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import it.unibo.progettomobile.data.remote.dto.MovieDTO
 import it.unibo.progettomobile.data.repositories.MovieRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 data class HomeState(
@@ -20,8 +18,43 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
     private val _state = MutableStateFlow(HomeState())
     val state: StateFlow<HomeState> = _state.asStateFlow()
 
+    private val _searchQuery = MutableStateFlow("")
+
     init {
-        fetchPopularMovies()
+        observeSearchQuery()
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun observeSearchQuery() {
+        viewModelScope.launch {
+            _searchQuery
+                .debounce(500)
+                .distinctUntilChanged()
+                .collect { query ->
+                    if (query.isBlank()) {
+                        fetchPopularMovies()
+                    } else {
+                        searchMovies(query)
+                    }
+                }
+        }
+    }
+
+    // 3. Questa funzione ora aggiorna solo il flusso locale, non fa chiamate API dirette
+    fun onSearchQueryChange(query: String) {
+        _searchQuery.value = query
+    }
+
+    private fun searchMovies(query: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            try {
+                val results = repository.searchMovies(query)
+                _state.update { it.copy(movies = results, isLoading = false) }
+            } catch (e: Exception) {
+                _state.update { it.copy(isLoading = false, error = e.message) }
+            }
+        }
     }
 
     fun fetchPopularMovies() {
@@ -29,10 +62,8 @@ class HomeViewModel(private val repository: MovieRepository) : ViewModel() {
             _state.update { it.copy(isLoading = true, error = null) }
             try {
                 val movies = repository.getPopularFilms()
-                println("MOVIES_DEBUG: Ricevuti ${movies.size} film") // Log di controllo
                 _state.update { it.copy(movies = movies, isLoading = false) }
             } catch (e: Exception) {
-                println("MOVIES_DEBUG: Errore -> ${e.message}") // Log dell'errore
                 _state.update { it.copy(isLoading = false, error = e.message) }
             }
         }
