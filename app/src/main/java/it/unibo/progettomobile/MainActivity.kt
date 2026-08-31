@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
-import it.unibo.progettomobile.ui.TravelDiaryNavGraph
+import it.unibo.progettomobile.ui.ProgettoMobileNavGraph
 import it.unibo.progettomobile.ui.theme.ProgettoMobileTheme
 
 class MainActivity : ComponentActivity() {
@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProgettoMobileTheme {
                 val navController = rememberNavController()
-                TravelDiaryNavGraph(navController)
+                ProgettoMobileNavGraph(navController)
             }
         }
     }

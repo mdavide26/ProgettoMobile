@@ -1,4 +1,4 @@
-package com.example.traveldiary
+package it.unibo.progettomobile
 
 import org.junit.Test
 

@@ -4,18 +4,15 @@ import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import it.unibo.progettomobile.data.LocationService
-import it.unibo.progettomobile.data.database.TravelDiaryDatabase
 import it.unibo.progettomobile.data.repositories.SettingsRepository
-import it.unibo.progettomobile.data.repositories.TripsRepository
-import it.unibo.progettomobile.ui.screens.addtravel.AddTravelViewModel
 import it.unibo.progettomobile.ui.screens.home.HomeViewModel
 import it.unibo.progettomobile.ui.screens.settings.SettingsViewModel
-import it.unibo.progettomobile.ui.screens.traveldetails.TravelDetailsViewModel
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
+import it.unibo.progettomobile.data.database.ProgettoMobileDatabase
 import it.unibo.progettomobile.data.remote.OSMDataSource
 import it.unibo.progettomobile.data.remote.TmdbDataSource
 import it.unibo.progettomobile.data.repositories.MovieRepository
@@ -37,12 +34,14 @@ val appModule = module {
     single {
         Room.databaseBuilder(
             get(),
-            TravelDiaryDatabase::class.java,
+            ProgettoMobileDatabase::class.java,
             "ProgettoMobile"
         )
         .fallbackToDestructiveMigration(true)
         .build()
     }
+
+    single { get<ProgettoMobileDatabase>().movieDAO() }
 
     single {
         HttpClient {
@@ -67,11 +66,7 @@ val appModule = module {
 
     // Repositories
 
-    single { TripsRepository(get(), get<Context>().contentResolver) }
-
     single { SettingsRepository(get()) }
-
-    single { get<TravelDiaryDatabase>().movieDAO() }
 
     single { MovieRepository(get(), get()) }
 
@@ -79,13 +74,9 @@ val appModule = module {
 
     viewModel { HomeViewModel(get()) }
 
-    viewModel { TravelDetailsViewModel(get()) }
-
     viewModel { MovieDetailsViewModel(get()) }
 
     viewModel { FavoritesViewModel(get()) }
-
-    viewModel { AddTravelViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
 }
