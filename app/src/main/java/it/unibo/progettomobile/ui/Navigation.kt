@@ -96,7 +96,10 @@ fun ProgettoMobileNavGraph(
 
             composable<ProgettoMobileRoute.Settings> {
                 val settingsVm = koinViewModel<SettingsViewModel>()
-                SettingsScreen(settingsVm.username, settingsVm::updateUsername, navController)
+                SettingsScreen(
+                    viewModel = settingsVm,
+                    navController = navController
+                )
             }
 
             composable<ProgettoMobileRoute.Favorites> {

@@ -14,6 +14,9 @@ data class User (
     val passwordHashed: String,
 
     @ColumnInfo
-    var username: String
+    var username: String,
+
+    @ColumnInfo
+    var profilePictureUri: String? = null
 
 )

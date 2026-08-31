@@ -7,7 +7,7 @@ import it.unibo.progettomobile.data.database.entities.User
 
 @Database(
     entities = [FavoriteMovie::class, User::class],
-    version = 4
+    version = 5
 )
 abstract class ProgettoMobileDatabase : RoomDatabase() {
     abstract fun movieDAO(): MovieDAO

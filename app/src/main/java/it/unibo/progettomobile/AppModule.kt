@@ -86,7 +86,7 @@ val appModule = module {
 
     viewModel { FavoritesViewModel(get()) }
 
-    viewModel { SettingsViewModel(get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get()) }
 
     viewModel { AuthViewModel(get(), get()) }
 
