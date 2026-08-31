@@ -94,7 +94,7 @@ val appModule = module {
 
     viewModel { AddTravelViewModel(get()) }
 
-    viewModel { SettingsViewModel(get()) }
+    viewModel { SettingsViewModel(get(),get())}
 
     viewModel { AuthViewModel(get(), get()) }   // <- RIAGGIUNTO
 }
