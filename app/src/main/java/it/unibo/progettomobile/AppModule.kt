@@ -5,9 +5,12 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
 import it.unibo.progettomobile.data.LocationService
 import it.unibo.progettomobile.data.database.TravelDiaryDatabase
+import it.unibo.progettomobile.data.datastore.SessionManager
+import it.unibo.progettomobile.data.repositories.AuthRepository
 import it.unibo.progettomobile.data.repositories.SettingsRepository
 import it.unibo.progettomobile.data.repositories.TripsRepository
 import it.unibo.progettomobile.ui.screens.addtravel.AddTravelViewModel
+import it.unibo.progettomobile.ui.screens.authentication.AuthViewModel
 import it.unibo.progettomobile.ui.screens.home.HomeViewModel
 import it.unibo.progettomobile.ui.screens.settings.SettingsViewModel
 import it.unibo.progettomobile.ui.screens.traveldetails.TravelDetailsViewModel
@@ -40,9 +43,12 @@ val appModule = module {
             TravelDiaryDatabase::class.java,
             "ProgettoMobile"
         )
-        .fallbackToDestructiveMigration(true)
-        .build()
+            .fallbackToDestructiveMigration(true)
+            .build()
     }
+
+    single { get<TravelDiaryDatabase>().movieDAO() }
+    single { get<TravelDiaryDatabase>().userDAO() }   // <- RIAGGIUNTO
 
     single {
         HttpClient {
@@ -71,9 +77,10 @@ val appModule = module {
 
     single { SettingsRepository(get()) }
 
-    single { get<TravelDiaryDatabase>().movieDAO() }
-
     single { MovieRepository(get(), get()) }
+
+    single { AuthRepository(get()) }        // <- RIAGGIUNTO
+    single { SessionManager(get()) }        // <- RIAGGIUNTO
 
     // ViewModels
 
@@ -88,4 +95,6 @@ val appModule = module {
     viewModel { AddTravelViewModel(get()) }
 
     viewModel { SettingsViewModel(get()) }
+
+    viewModel { AuthViewModel(get(), get()) }   // <- RIAGGIUNTO
 }
