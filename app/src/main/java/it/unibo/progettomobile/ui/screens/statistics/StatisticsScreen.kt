@@ -2,6 +2,7 @@ package it.unibo.progettomobile.ui.screens.statistics
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -35,7 +36,9 @@ private val chartColors = listOf(
 @Composable
 fun PieChart(data: List<GenreStat>, modifier: Modifier = Modifier) {
     val total = data.sumOf { it.count }.toFloat()
-    Canvas(modifier = modifier.size(200.dp)) {
+    Canvas(
+        modifier = modifier.size(200.dp),
+    ) {
         var startAngle = -90f
         data.forEachIndexed { index, stat ->
             val sweepAngle = (stat.count / total) * 360f
@@ -66,7 +69,8 @@ fun StatisticsScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
             Text("Generi preferiti", style = MaterialTheme.typography.titleLarge)
             Spacer(Modifier.height(16.dp))
