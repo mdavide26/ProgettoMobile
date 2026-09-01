@@ -14,7 +14,7 @@ import it.unibo.progettomobile.ui.ProgettoMobileRoute
 import it.unibo.progettomobile.ui.composables.BottomBar
 import it.unibo.progettomobile.ui.composables.TopBar
 import it.unibo.progettomobile.ui.screens.home.MovieItem // Riutilizziamo il componente della Home
-import it.unibo.progettomobile.data.database.FavoriteMovie
+import it.unibo.progettomobile.data.database.entities.FavoriteMovie
 import it.unibo.progettomobile.data.remote.dto.MovieDTO
 
 @Composable

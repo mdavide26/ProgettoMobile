@@ -1,17 +1,20 @@
 package it.unibo.progettomobile.data.repositories
 
-import it.unibo.progettomobile.data.database.FavoriteMovie
 import it.unibo.progettomobile.data.database.MovieDAO
+import it.unibo.progettomobile.data.database.entities.FavoriteMovie
+import it.unibo.progettomobile.data.datastore.SessionManager
 import it.unibo.progettomobile.data.remote.TmdbDataSource
 import it.unibo.progettomobile.data.remote.dto.MovieDTO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
 class MovieRepository(
     private val dataSource: TmdbDataSource,
-    private val movieDao: MovieDAO
+    private val movieDao: MovieDAO,
+    private val sessionManager: SessionManager
 ) {
-    // --- Richieste API (Remote) ---
-
     suspend fun getPopularFilms(): List<MovieDTO> {
         return dataSource.getPopularFilms().results
     }
@@ -28,31 +31,34 @@ class MovieRepository(
         return dataSource.searchMovies(query).results
     }
 
-    // --- Gestione Preferiti (Locale/Database) ---
-
     fun getAllFavorites(): Flow<List<FavoriteMovie>> {
-        return movieDao.getAllFavorites()
-    }
-
-    fun isFavorite(movieId: Int): Flow<Boolean> {
-        return movieDao.isFavorite(movieId)
-    }
-
-    suspend fun toggleFavorite(movie: MovieDTO, isCurrentlyFavorite: Boolean) {
-        if (isCurrentlyFavorite) {
-            movieDao.deleteFavorite(movie.toFavoriteEntity())
-        } else {
-            movieDao.insertFavorite(movie.toFavoriteEntity())
+        return sessionManager.loggedInEmail.flatMapLatest { email ->
+            if (email != null) movieDao.getAllFavorites(email) else flowOf(emptyList())
         }
     }
 
-    // Funzione di utilità per convertire da DTO (API) a Entity (Database)
-    private fun MovieDTO.toFavoriteEntity() = FavoriteMovie(
+    fun isFavorite(movieId: Int): Flow<Boolean> {
+        return sessionManager.loggedInEmail.flatMapLatest { email ->
+            if (email != null) movieDao.isFavorite(movieId, email) else flowOf(false)
+        }
+    }
+
+    suspend fun toggleFavorite(movie: MovieDTO, isCurrentlyFavorite: Boolean) {
+        val email = sessionManager.loggedInEmail.first() ?: return
+        if (isCurrentlyFavorite) {
+            movieDao.deleteFavorite(movie.toFavoriteEntity(email))
+        } else {
+            movieDao.insertFavorite(movie.toFavoriteEntity(email))
+        }
+    }
+
+    private fun MovieDTO.toFavoriteEntity(userEmail: String) = FavoriteMovie(
         id = id,
         title = title,
         posterPath = poster_path,
         overview = overview,
         voteAverage = vote_average,
-        genreId = genre_ids.firstOrNull()   // <- AGGIUNTO
+        genreId = genre_ids.firstOrNull(),
+        userEmail = userEmail
     )
 }

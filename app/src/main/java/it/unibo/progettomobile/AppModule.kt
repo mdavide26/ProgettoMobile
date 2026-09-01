@@ -3,10 +3,8 @@ package it.unibo.progettomobile
 import android.content.Context
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.room.Room
-import it.unibo.progettomobile.data.LocationService
 import it.unibo.progettomobile.data.database.ProgettoMobileDatabase
 import it.unibo.progettomobile.data.datastore.SessionManager
-import it.unibo.progettomobile.data.remote.OSMDataSource
 import it.unibo.progettomobile.data.remote.TmdbDataSource
 import it.unibo.progettomobile.data.repositories.AuthRepository
 import it.unibo.progettomobile.data.repositories.MovieRepository
@@ -65,16 +63,10 @@ val appModule = module {
         }
     }
 
-    single { OSMDataSource(get()) }
-
-    single { LocationService(get()) }
-
     // Repositories
 
     single { SettingsRepository(get()) }
-
-    single { MovieRepository(get(), get()) }
-
+    single { MovieRepository(get(), get(), get()) }
     single { AuthRepository(get()) }
     single { SessionManager(get()) }
 
@@ -91,4 +83,5 @@ val appModule = module {
     viewModel { AuthViewModel(get(), get()) }
 
     viewModel { StatisticsViewModel(get()) }
+
 }
