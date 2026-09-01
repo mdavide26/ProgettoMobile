@@ -4,11 +4,24 @@ import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
+import it.unibo.progettomobile.data.database.MovieDAO
+import it.unibo.progettomobile.data.database.entities.FavoriteMovie
+import it.unibo.progettomobile.data.datastore.SessionManager
 import it.unibo.progettomobile.data.remote.TmdbDataSource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.junit.Test
 import kotlin.test.assertTrue
+
+// Fake minimale, sufficiente per far compilare ed eseguire i test di rete
+private class FakeMovieDAO : MovieDAO {
+    override fun getAllFavorites(userEmail: String): Flow<List<FavoriteMovie>> = flowOf(emptyList())
+    override suspend fun insertFavorite(movie: FavoriteMovie) {}
+    override suspend fun deleteFavorite(movie: FavoriteMovie) {}
+    override fun isFavorite(id: Int, userEmail: String): Flow<Boolean> = flowOf(false)
+}
 
 class MovieRepositoryTest {
 
@@ -18,7 +31,11 @@ class MovieRepositoryTest {
         }
     }
 
-    private val repository = MovieRepository(TmdbDataSource(httpClient))
+    private val repository = MovieRepository(
+        TmdbDataSource(httpClient),
+        FakeMovieDAO(),
+        SessionManager(context = TODO())   // vedi nota sotto
+    )
 
     @Test
     fun `getPopularFilms restituisce una lista non vuota`() = runTest {
